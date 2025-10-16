@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "J/7o+TBX3kM=",
+  "success": true,
+  "projectFilePath": "C:\\Development\\365Scores\\src\\DataAPI\\DataAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\USER\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.22.1\\microsoft.visualstudio.azure.containers.tools.targets.1.22.1.nupkg.sha512"
+  ],
+  "logs": []
+}

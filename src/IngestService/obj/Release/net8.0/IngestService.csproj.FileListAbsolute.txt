@@ -1,0 +1,8 @@
+C:\Development\365Scores\src\IngestService\obj\Release\net8.0\IngestService.csproj.AssemblyReference.cache
+C:\Development\365Scores\src\IngestService\obj\Release\net8.0\rpswa.dswa.cache.json
+C:\Development\365Scores\src\IngestService\obj\Release\net8.0\IngestService.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\365Scores\src\IngestService\obj\Release\net8.0\IngestService.AssemblyInfoInputs.cache
+C:\Development\365Scores\src\IngestService\obj\Release\net8.0\IngestService.AssemblyInfo.cs
+C:\Development\365Scores\src\IngestService\obj\Release\net8.0\IngestService.csproj.CoreCompileInputs.cache
+C:\Development\365Scores\src\IngestService\obj\Release\net8.0\IngestService.MvcApplicationPartsAssemblyInfo.cs
+C:\Development\365Scores\src\IngestService\obj\Release\net8.0\IngestService.MvcApplicationPartsAssemblyInfo.cache

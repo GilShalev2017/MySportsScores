@@ -1,0 +1,15 @@
+C:\Development\Demo\SportsDataDemo.Api\bin\Debug\net8.0\SportsDataDemo.Api.exe
+C:\Development\Demo\SportsDataDemo.Api\bin\Debug\net8.0\SportsDataDemo.Api.deps.json
+C:\Development\Demo\SportsDataDemo.Api\bin\Debug\net8.0\SportsDataDemo.Api.runtimeconfig.json
+C:\Development\Demo\SportsDataDemo.Api\bin\Debug\net8.0\SportsDataDemo.Api.dll
+C:\Development\Demo\SportsDataDemo.Api\bin\Debug\net8.0\SportsDataDemo.Api.pdb
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\SportsDataDemo.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\SportsDataDemo.Api.AssemblyInfoInputs.cache
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\SportsDataDemo.Api.AssemblyInfo.cs
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\SportsDataDemo.Api.csproj.CoreCompileInputs.cache
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\SportsDataDemo.Api.sourcelink.json
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\SportsDataDemo.Api.dll
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\refint\SportsDataDemo.Api.dll
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\SportsDataDemo.Api.pdb
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\SportsDataDemo.Api.genruntimeconfig.cache
+C:\Development\Demo\SportsDataDemo.Api\obj\Debug\net8.0\ref\SportsDataDemo.Api.dll

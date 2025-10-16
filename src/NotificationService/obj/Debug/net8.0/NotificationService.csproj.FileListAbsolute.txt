@@ -1,0 +1,8 @@
+C:\Development\365Scores\src\NotificationService\obj\Debug\net8.0\NotificationService.csproj.AssemblyReference.cache
+C:\Development\365Scores\src\NotificationService\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Development\365Scores\src\NotificationService\obj\Debug\net8.0\NotificationService.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\365Scores\src\NotificationService\obj\Debug\net8.0\NotificationService.AssemblyInfoInputs.cache
+C:\Development\365Scores\src\NotificationService\obj\Debug\net8.0\NotificationService.AssemblyInfo.cs
+C:\Development\365Scores\src\NotificationService\obj\Debug\net8.0\NotificationService.csproj.CoreCompileInputs.cache
+C:\Development\365Scores\src\NotificationService\obj\Debug\net8.0\NotificationService.MvcApplicationPartsAssemblyInfo.cs
+C:\Development\365Scores\src\NotificationService\obj\Debug\net8.0\NotificationService.MvcApplicationPartsAssemblyInfo.cache

@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Development\\Demo\\SportsDataDemo.Api\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{89FE876D-8475-40D7-89B0-AFB7D8269AAE}|..\\SportsDataDemo.Ingest\\SportsDataDemo.Ingest.csproj|c:\\development\\demo\\sportsdatademo.ingest\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52F091C3-7C26-4268-886F-B233B419F4B4}|SportsDataDemo.Api.csproj|c:\\development\\demo\\sportsdatademo.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52F091C3-7C26-4268-886F-B233B419F4B4}|SportsDataDemo.Api.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Development\\Demo\\SportsDataDemo.Ingest\\Program.cs",
+              "RelativeDocumentMoniker": "..\\SportsDataDemo.Ingest\\Program.cs",
+              "ToolTip": "C:\\Development\\Demo\\SportsDataDemo.Ingest\\Program.cs",
+              "RelativeToolTip": "..\\SportsDataDemo.Ingest\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-16T12:16:46.453Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Development\\Demo\\SportsDataDemo.Api\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Development\\Demo\\SportsDataDemo.Api\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-16T12:15:25.152Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

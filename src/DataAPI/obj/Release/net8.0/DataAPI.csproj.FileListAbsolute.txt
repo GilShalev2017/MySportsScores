@@ -1,0 +1,14 @@
+C:\Development\365Scores\src\DataAPI\bin\Release\net8.0\DataAPI.exe
+C:\Development\365Scores\src\DataAPI\bin\Release\net8.0\DataAPI.deps.json
+C:\Development\365Scores\src\DataAPI\bin\Release\net8.0\DataAPI.runtimeconfig.json
+C:\Development\365Scores\src\DataAPI\bin\Release\net8.0\DataAPI.dll
+C:\Development\365Scores\src\DataAPI\bin\Release\net8.0\DataAPI.pdb
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\DataAPI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\DataAPI.AssemblyInfoInputs.cache
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\DataAPI.AssemblyInfo.cs
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\DataAPI.csproj.CoreCompileInputs.cache
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\DataAPI.dll
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\refint\DataAPI.dll
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\DataAPI.pdb
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\DataAPI.genruntimeconfig.cache
+C:\Development\365Scores\src\DataAPI\obj\Release\net8.0\ref\DataAPI.dll

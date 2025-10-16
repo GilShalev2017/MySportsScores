@@ -1,0 +1,12 @@
+C:\Development\365Scores\src\Common\bin\Debug\net8.0\Common.deps.json
+C:\Development\365Scores\src\Common\bin\Debug\net8.0\Common.dll
+C:\Development\365Scores\src\Common\bin\Debug\net8.0\Common.pdb
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\Common.AssemblyInfoInputs.cache
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\Common.AssemblyInfo.cs
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\Common.csproj.CoreCompileInputs.cache
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\Common.dll
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\refint\Common.dll
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\Common.pdb
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\ref\Common.dll
+C:\Development\365Scores\src\Common\obj\Debug\net8.0\Common.csproj.AssemblyReference.cache

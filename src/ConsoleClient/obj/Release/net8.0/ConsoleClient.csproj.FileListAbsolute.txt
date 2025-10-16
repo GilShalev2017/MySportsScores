@@ -1,0 +1,14 @@
+C:\Development\365Scores\src\ConsoleClient\bin\Release\net8.0\ConsoleClient.exe
+C:\Development\365Scores\src\ConsoleClient\bin\Release\net8.0\ConsoleClient.deps.json
+C:\Development\365Scores\src\ConsoleClient\bin\Release\net8.0\ConsoleClient.runtimeconfig.json
+C:\Development\365Scores\src\ConsoleClient\bin\Release\net8.0\ConsoleClient.dll
+C:\Development\365Scores\src\ConsoleClient\bin\Release\net8.0\ConsoleClient.pdb
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\ConsoleClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\ConsoleClient.AssemblyInfoInputs.cache
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\ConsoleClient.AssemblyInfo.cs
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\ConsoleClient.csproj.CoreCompileInputs.cache
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\ConsoleClient.dll
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\refint\ConsoleClient.dll
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\ConsoleClient.pdb
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\ConsoleClient.genruntimeconfig.cache
+C:\Development\365Scores\src\ConsoleClient\obj\Release\net8.0\ref\ConsoleClient.dll

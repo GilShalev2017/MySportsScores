@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SportsDataDemo.Api": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
