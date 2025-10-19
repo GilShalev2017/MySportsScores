@@ -122,3 +122,4 @@ C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\refint\FeedLis
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.pdb
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.genruntimeconfig.cache
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\ref\FeedListenerService.dll
+C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.sourcelink.json

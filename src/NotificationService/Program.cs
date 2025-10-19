@@ -1,4 +1,6 @@
 using StackExchange.Redis;
+using NotificationService.Services;
+using NotificationService.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +10,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 
 // Add SignalR with Redis backplane
 builder.Services.AddSignalR()
-    .AddStackExchangeRedis(builder.Configuration.GetConnectionString("Redis"), options =>
+    .AddRedis(builder.Configuration.GetConnectionString("Redis"), options =>
     {
         options.Configuration.ChannelPrefix = "SignalR";
     });

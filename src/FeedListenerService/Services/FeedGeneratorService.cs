@@ -4,11 +4,6 @@ using FeedListenerService.Models;
 
 namespace FeedListenerService.Services
 {
-
-
-    // =====================================================
-    // Services/FeedGeneratorService.cs
-    // =====================================================
     public class FeedGeneratorService : BackgroundService
     {
         private readonly IKafkaProducerService _kafka;
