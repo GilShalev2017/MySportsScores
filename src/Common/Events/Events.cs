@@ -9,14 +9,14 @@ namespace Common.Events
 {
     public class SportEventUpdate
     {
-        public string EventId { get; set; }
+        public required string EventId { get; set; }
         public int MatchId { get; set; }
         public EventType EventType { get; set; }
         public int Minute { get; set; }
         public int? PlayerId { get; set; }
         public int? TeamId { get; set; }
-        public string Description { get; set; }
-        public Dictionary<string, object> Metadata { get; set; }
+        public required string Description { get; set; }
+        public required Dictionary<string, object> Metadata { get; set; }
         public DateTime Timestamp { get; set; }
     }
     
@@ -34,7 +34,7 @@ namespace Common.Events
     {
         public int PlayerId { get; set; }
         public int MatchId { get; set; }
-        public Dictionary<string, object> Statistics { get; set; }
+        public required Dictionary<string, object> Statistics { get; set; }
         public DateTime Timestamp { get; set; }
     }
     

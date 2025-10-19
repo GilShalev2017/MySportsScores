@@ -11,39 +11,39 @@
     public class League
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public required string Name { get; set; }
         public SportType Sport { get; set; }
-        public string Country { get; set; }
-        public int Season { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public required string Country { get; set; }
+        public required int Season { get; set; }
+        public required DateTime CreatedAt { get; set; }
+        public required DateTime UpdatedAt { get; set; }
     }
 
     public class Team
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string ShortName { get; set; }
-        public string LogoUrl { get; set; }
-        public string Country { get; set; }
-        public int LeagueId { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public required int Id { get; set; }
+        public required string Name { get; set; }
+        public required string ShortName { get; set; }
+        public required string LogoUrl { get; set; }
+        public required string Country { get; set; }
+        public required int LeagueId { get; set; }
+        public required DateTime CreatedAt { get; set; }
+        public required DateTime UpdatedAt { get; set; }
     }
     
     public class Player
     {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public required int Id { get; set; }
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
         public string FullName => $"{FirstName} {LastName}";
-        public int ShirtNumber { get; set; }
-        public string Position { get; set; }
-        public int TeamId { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string Nationality { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public required int ShirtNumber { get; set; }
+        public required string Position { get; set; }
+        public required int TeamId { get; set; }
+        public required DateTime DateOfBirth { get; set; }
+        public required string Nationality { get; set; }
+        public required DateTime CreatedAt { get; set; }
+        public required DateTime UpdatedAt { get; set; }
     }
 
     
@@ -59,18 +59,18 @@
 
     public class Match
     {
-        public int Id { get; set; }
-        public int LeagueId { get; set; }
-        public int HomeTeamId { get; set; }
-        public int AwayTeamId { get; set; }
-        public DateTime ScheduledTime { get; set; }
-        public MatchStatus Status { get; set; }
-        public int HomeScore { get; set; }
-        public int AwayScore { get; set; }
-        public int Minute { get; set; }
-        public string Venue { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public required int Id { get; set; }
+        public required int LeagueId { get; set; }
+        public required int HomeTeamId { get; set; }
+        public required int AwayTeamId { get; set; }
+        public required DateTime ScheduledTime { get; set; }
+        public required MatchStatus Status { get; set; }
+        public required int HomeScore { get; set; }
+        public required int AwayScore { get; set; }
+        public required int Minute { get; set; }
+        public required string Venue { get; set; }
+        public required DateTime CreatedAt { get; set; }
+        public required DateTime UpdatedAt { get; set; }
     }
 
     
@@ -96,15 +96,15 @@
         public int Minute { get; set; }
         public int? PlayerId { get; set; }
         public int? TeamId { get; set; }
-        public string Description { get; set; }
-        public Dictionary<string, object> Metadata { get; set; }
+        public required string Description { get; set; }
+        public required Dictionary<string, object> Metadata { get; set; }
         public DateTime Timestamp { get; set; }
     }
 
     public class UserPreference
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
         public List<int> FavoriteTeamIds { get; set; } = new();
         public List<int> FavoritePlayerIds { get; set; } = new();
         public List<int> FavoriteLeagueIds { get; set; } = new();
