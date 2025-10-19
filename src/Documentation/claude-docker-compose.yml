@@ -1,0 +1,365 @@
+version: '3.8'
+
+services:
+  # ========================================
+  # Zookeeper - Kafka Dependency
+  # ========================================
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - sports365-network
+
+  # ========================================
+  # Kafka Broker
+  # ========================================
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_LOG_RETENTION_HOURS: 168
+    networks:
+      - sports365-network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  # ========================================
+  # Kafka Init - Create Topics
+  # ========================================
+  kafka-init:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # Wait for Kafka to be ready
+      kafka-topics --bootstrap-server kafka:9092 --list
+      
+      echo 'Creating Kafka topics...'
+      
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic ingest-events --replication-factor 1 --partitions 12
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic live-scores --replication-factor 1 --partitions 8
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic player-updates --replication-factor 1 --partitions 6
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic user-notifications --replication-factor 1 --partitions 4
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic dead-letter-queue --replication-factor 1 --partitions 2
+      
+      echo 'Kafka topics created successfully!'
+      kafka-topics --bootstrap-server kafka:9092 --list
+      "
+    networks:
+      - sports365-network
+
+  # ========================================
+  # Redis - Caching & SignalR Backplane
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    hostname: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - sports365-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========================================
+  # Elasticsearch - Search & Analytics
+  # ========================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    hostname: elasticsearch
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - sports365-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ========================================
+  # FeedListenerService
+  # ========================================
+  feed-listener:
+    build:
+      context: .
+      dockerfile: 365Scores.FeedListenerService/Dockerfile
+    container_name: feed-listener
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Kafka__BootstrapServers=kafka:9092
+    ports:
+      - "5001:80"
+    networks:
+      - sports365-network
+    restart: unless-stopped
+
+  # ========================================
+  # IngestService (Multiple Replicas)
+  # ========================================
+  ingest-service-1:
+    build:
+      context: .
+      dockerfile: 365Scores.IngestService/Dockerfile
+    container_name: ingest-service-1
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Redis=redis:6379
+      - Kafka__BootstrapServers=kafka:9092
+    ports:
+      - "5002:80"
+    networks:
+      - sports365-network
+    restart: unless-stopped
+
+  ingest-service-2:
+    build:
+      context: .
+      dockerfile: 365Scores.IngestService/Dockerfile
+    container_name: ingest-service-2
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__SqlServer=Server=host.docker.internal,1433;Database=Sports365;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__MongoDB=mongodb://host.docker.internal:27017
+      - ConnectionStrings__Elasticsearch=http://elasticsearch:9200
+      - ConnectionStrings__Redis=redis:6379
+      - Kafka__BootstrapServers=kafka:9092
+    ports:
+      - "5012:80"
+    networks:
+      - sports365-network
+    restart: unless-stopped
+
+  ingest-service-3:
+    build:
+      context: .
+      dockerfile: 365Scores.IngestService/Dockerfile
+    container_name: ingest-service-3
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__SqlServer=Server=host.docker.internal,1433;Database=Sports365;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__MongoDB=mongodb://host.docker.internal:27017
+      - ConnectionStrings__Elasticsearch=http://elasticsearch:9200
+      - ConnectionStrings__Redis=redis:6379
+      - Kafka__BootstrapServers=kafka:9092
+    ports:
+      - "5013:80"
+    networks:
+      - sports365-network
+    restart: unless-stopped
+
+  # ========================================
+  # NotificationService (Multiple Replicas)
+  # ========================================
+  notification-service-1:
+    build:
+      context: .
+      dockerfile: 365Scores.NotificationService/Dockerfile
+    container_name: notification-service-1
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Redis=redis:6379
+      - Kafka__BootstrapServers=kafka:9092
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5003:80"
+    networks:
+      - sports365-network
+    restart: unless-stopped
+
+  notification-service-2:
+    build:
+      context: .
+      dockerfile: 365Scores.NotificationService/Dockerfile
+    container_name: notification-service-2
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Redis=redis:6379
+      - Kafka__BootstrapServers=kafka:9092
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5014:80"
+    networks:
+      - sports365-network
+    restart: unless-stopped
+
+  # ========================================
+  # DataAPI (Multiple Replicas)
+  # ========================================
+  data-api-1:
+    build:
+      context: .
+      dockerfile: 365Scores.DataAPI/Dockerfile
+    container_name: data-api-1
+    depends_on:
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__SqlServer=Server=host.docker.internal,1433;Database=Sports365;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__MongoDB=mongodb://host.docker.internal:27017
+      - ConnectionStrings__Elasticsearch=http://elasticsearch:9200
+      - ConnectionStrings__Redis=redis:6379
+    ports:
+      - "5004:80"
+    networks:
+      - sports365-network
+    restart: unless-stopped
+
+  data-api-2:
+    build:
+      context: .
+      dockerfile: 365Scores.DataAPI/Dockerfile
+    container_name: data-api-2
+    depends_on:
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__SqlServer=Server=host.docker.internal,1433;Database=Sports365;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__MongoDB=mongodb://host.docker.internal:27017
+      - ConnectionStrings__Elasticsearch=http://elasticsearch:9200
+      - ConnectionStrings__Redis=redis:6379
+    ports:
+      - "5015:80"
+    networks:
+      - sports365-network
+    restart: unless-stopped
+
+  # ========================================
+  # Console Client (Optional - for testing)
+  # ========================================
+  # Uncomment to run console client in Docker
+  # console-client:
+  #   build:
+  #     context: .
+  #     dockerfile: 365Scores.ConsoleClient/Dockerfile
+  #   container_name: console-client
+  #   depends_on:
+  #     - notification-service-1
+  #   environment:
+  #     - NotificationServiceUrl=http://notification-service-1:80
+  #   stdin_open: true
+  #   tty: true
+  #   networks:
+  #     - sports365-network
+
+networks:
+  sports365-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  elasticsearch-data:
+
+# ========================================
+# SCALING INSTRUCTIONS
+# ========================================
+# To scale services horizontally:
+#
+# IngestService:
+#   docker-compose up -d --scale ingest-service-1=5
+#
+# NotificationService:
+#   docker-compose up -d --scale notification-service-1=3
+#
+# DataAPI:
+#   docker-compose up -d --scale data-api-1=5
+#
+# Monitor Kafka consumer lag:
+#   docker exec -it kafka kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group ingest-service-group
+#
+# View Kafka topics:
+#   docker exec -it kafka kafka-topics --bootstrap-server localhost:9092 --list
+#
+# Check Redis keys:
+#   docker exec -it redis redis-cli KEYS "*"
+#
+# Query Elasticsearch:
+#   curl http://localhost:9200/_cat/indices?v
+#   curl http://localhost:9200/sports-events/_search?pretty
+#
+# ========================================__SqlServer=Server=host.docker.internal,1433;Database=Sports365;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__MongoDB=mongodb://host.docker.internal:27017
+      - ConnectionStrings__Elasticsearch=http://elasticsearch:9200
+      - ConnectionStrings

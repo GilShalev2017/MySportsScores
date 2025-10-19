@@ -1,0 +1,71 @@
+version: '3.7'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    hostname: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"   # for external (host) access
+      - "29092:29092" # for internal Docker network access
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+      # Map protocols to listeners
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+
+      # Kafka listens on both internal and external ports
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+
+      # Containers in the same network use kafka:29092
+      # Host machine connects via localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    container_name: kafdrop
+    depends_on:
+      - kafka
+    ports:
+      # Access the Kafdrop UI in your browser at http://localhost:9000
+      - "9000:9000"
+    environment:
+      # Kafdrop must connect to Kafka's internal listener
+      KAFKA_BROKERCONNECT: kafka:29092
+      JVM_OPTS: "-Xms32M -Xmx64M"
+
+  feedlistenerservice:
+    build: 
+      context: . # Build context is the root directory
+      dockerfile: src/FeedListenerService/Dockerfile # Path to the Dockerfile
+    container_name: feedlistenerservice
+    # The application needs to wait for Kafka to be ready
+    depends_on:
+      - kafka 
+    # This is where your service will look for the Kafka broker.
+    # It will use the Kafka service name (kafka:9092) for internal communication.
+    environment:
+      # Pass the Kafka connection string into the container.
+      # The host 'kafka' resolves to the 'kafka' container inside the Docker network.
+      Kafka__BootstrapServers: kafka:29092 
+    # Map the web port (if your service has an API/health check)
+    ports:
+      - "5000:80" # Example mapping for port 80 exposed in the Dockerfile
