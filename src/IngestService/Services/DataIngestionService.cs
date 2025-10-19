@@ -1,5 +1,6 @@
 ﻿using Common.Events;
 using Common.Models;
+using Common.Repositories;
 using IngestService.Repositories;
 using System;
 using System.Collections.Generic;

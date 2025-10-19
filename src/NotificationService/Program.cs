@@ -9,8 +9,10 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")));
 
 // Add SignalR with Redis backplane
+// FIX: Using AddStackExchangeRedis() method which is provided by the modern
+// Microsoft.AspNetCore.SignalR.StackExchangeRedis NuGet package (v8.0.0 for .NET 8)
 builder.Services.AddSignalR()
-    .AddRedis(builder.Configuration.GetConnectionString("Redis"), options =>
+    .AddStackExchangeRedis(builder.Configuration.GetConnectionString("Redis"), options =>
     {
         options.Configuration.ChannelPrefix = "SignalR";
     });

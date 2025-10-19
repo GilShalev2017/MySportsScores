@@ -1,5 +1,5 @@
 ﻿using Common.DTOs;
-using DataAPI.Repositories;
+using Common.Repositories;
 using MongoDB.Driver;
 using StackExchange.Redis;
 using System.Text.Json;

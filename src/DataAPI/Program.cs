@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Nest;
 using StackExchange.Redis;
 using DataAPI.Services;
+using Common.Data;
+using Common.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

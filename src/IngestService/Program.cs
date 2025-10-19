@@ -1,3 +1,13 @@
+using Common.Data;
+using Common.Repositories;
+using IngestService.Repositories;
+using IngestService.Services;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using Nest;
+using Scores365.IngestService.Services;
+using StackExchange.Redis;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

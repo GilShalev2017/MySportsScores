@@ -107,6 +107,7 @@ C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerSe
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.csproj.CoreCompileInputs.cache
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.MvcApplicationPartsAssemblyInfo.cs
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.MvcApplicationPartsAssemblyInfo.cache
+C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.sourcelink.json
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -122,4 +123,3 @@ C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\refint\FeedLis
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.pdb
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.genruntimeconfig.cache
 C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\ref\FeedListenerService.dll
-C:\Development\365Scores\src\FeedListenerService\obj\Debug\net8.0\FeedListenerService.sourcelink.json

@@ -1,5 +1,5 @@
 ﻿using Common.DTOs;
-using DataAPI.Repositories;
+using Common.Repositories;
 
 namespace DataAPI.Services
 {

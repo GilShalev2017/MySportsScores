@@ -4,6 +4,7 @@ using Common.Events;
 using Confluent.Kafka;
 using global::IngestService.Services;
 using System.Text.Json;
+using System.Text; // Added for UTF8 Encoding
 
 public class KafkaConsumerService : BackgroundService
 {
@@ -41,9 +42,14 @@ public class KafkaConsumerService : BackgroundService
         // Start multiple consumer tasks for different topics
         var consumerTasks = new List<Task>
         {
-            ConsumeTopicAsync("ingest-events", ProcessSportEventAsync, config, stoppingToken),
-            ConsumeTopicAsync("live-scores", ProcessScoreUpdateAsync, config, stoppingToken),
-            ConsumeTopicAsync("player-updates", ProcessPlayerUpdateAsync, config, stoppingToken)
+            // FIX: Explicitly specify the generic type argument <SportEventUpdate>
+            ConsumeTopicAsync<SportEventUpdate>("ingest-events", ProcessSportEventAsync, config, stoppingToken),
+            
+            // FIX: Explicitly specify the generic type argument <ScoreUpdate>
+            ConsumeTopicAsync<ScoreUpdate>("live-scores", ProcessScoreUpdateAsync, config, stoppingToken),
+            
+            // FIX: Explicitly specify the generic type argument <PlayerUpdate>
+            ConsumeTopicAsync<PlayerUpdate>("player-updates", ProcessPlayerUpdateAsync, config, stoppingToken)
         };
 
         // Start metrics reporting
@@ -79,26 +85,34 @@ public class KafkaConsumerService : BackgroundService
                 try
                 {
                     var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
-                    
+
                     if (consumeResult != null)
                     {
                         await ProcessMessageAsync(consumeResult, processFunc);
-                        
+
                         // Commit offset after successful processing
                         consumer.Commit(consumeResult);
                         consumer.StoreOffset(consumeResult);
-                        
+
                         Interlocked.Increment(ref _totalMessagesProcessed);
                     }
                 }
                 catch (ConsumeException ex)
                 {
                     _logger.LogError(ex, "Consume error on {Topic}", topic);
-                    
+
                     // Send to DLQ if needed
                     if (ex.Error.IsFatal)
                     {
-                        await SendToDeadLetterQueueAsync(topic, ex.ConsumerRecord?.Message?.Value, ex.Message);
+                        // FIX: Safely convert byte[] to string before calling SendToDeadLetterQueueAsync.
+                        // The ConsumerRecord?.Message?.Value is of type byte[] when a ConsumeException occurs.
+                        string messageValue = null;
+                        if (ex.ConsumerRecord?.Message?.Value is byte[] byteValue)
+                        {
+                            messageValue = Encoding.UTF8.GetString(byteValue);
+                        }
+
+                        await SendToDeadLetterQueueAsync(topic, messageValue, ex.Message);
                     }
                 }
                 catch (Exception ex)
@@ -169,7 +183,7 @@ public class KafkaConsumerService : BackgroundService
             };
 
             using var producer = new ProducerBuilder<string, string>(dlqConfig).Build();
-            
+
             var dlqMessage = new
             {
                 originalTopic,
@@ -196,18 +210,18 @@ public class KafkaConsumerService : BackgroundService
     private async Task ReportMetrics(CancellationToken stoppingToken)
     {
         var lastCount = 0L;
-        
+
         while (!stoppingToken.IsCancellationRequested)
         {
             await Task.Delay(10000, stoppingToken);
-            
+
             var currentCount = Interlocked.Read(ref _totalMessagesProcessed);
             var messagesPerSecond = (currentCount - lastCount) / 10.0;
             lastCount = currentCount;
-            
+
             _logger.LogInformation(
-                "📊 IngestService Metrics - Total Processed: {TotalMessages:N0} | Messages/sec: {MessagesPerSec:N1}", 
-                currentCount, 
+                "📊 IngestService Metrics - Total Processed: {TotalMessages:N0} | Messages/sec: {MessagesPerSec:N1}",
+                currentCount,
                 messagesPerSecond);
         }
     }
