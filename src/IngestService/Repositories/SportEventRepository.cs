@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using Confluent.Kafka;
 using MongoDB.Driver;
 using Nest;
 using StackExchange.Redis;
@@ -37,11 +38,38 @@ namespace IngestService.Repositories
             _logger = logger;
         }
 
+        public static object ConvertJsonElement(JsonElement je)
+        {
+            return je.ValueKind switch
+            {
+                JsonValueKind.Object => je.EnumerateObject()
+                                          .ToDictionary(p => p.Name, p => ConvertJsonElement(p.Value)),
+                JsonValueKind.Array => je.EnumerateArray().Select(ConvertJsonElement).ToList(),
+                JsonValueKind.String => je.GetString()!,
+                JsonValueKind.Number => je.TryGetInt64(out var l) ? (object)l : je.GetDouble(),
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Null => null!,
+                _ => je.GetRawText()
+            };
+        }
+
+        public static Dictionary<string, object> SanitizeMetadata(Dictionary<string, object> metadata)
+        {
+            return metadata.ToDictionary(
+                kv => kv.Key,
+                kv => kv.Value is JsonElement je ? ConvertJsonElement(je) : kv.Value
+            );
+        }
+
         public async Task SaveEventToMongoAsync(SportEvent sportEvent)
         {
             try
             {
                 var collection = _mongoDb.GetCollection<SportEvent>("match_events");
+
+                sportEvent.Metadata = SanitizeMetadata(sportEvent.Metadata);
+
                 await collection.InsertOneAsync(sportEvent);
                 _logger.LogDebug("Saved event {EventId} to MongoDB", sportEvent.Id);
             }
