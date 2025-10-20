@@ -2,6 +2,7 @@ using Common.Data;
 using Common.Repositories;
 using IngestService.Repositories;
 using IngestService.Services;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Nest;
@@ -54,12 +55,30 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Ensure database is created
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<SportsDbContext>();
-    context.Database.EnsureCreated();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var context = scope.ServiceProvider.GetRequiredService<SportsDbContext>();
+//    context.Database.EnsureCreated();
+//}
+var maxRetries = 10;
+var delay = TimeSpan.FromSeconds(5);
 
+for (int i = 0; i < maxRetries; i++)
+{
+    try
+    {
+        using var scope = app.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<SportsDbContext>();
+        context.Database.EnsureCreated();
+        break;
+    }
+    catch (SqlException)
+    {
+        if (i == maxRetries - 1) throw;
+        Console.WriteLine("SQL Server not ready yet - retrying...");
+        Thread.Sleep(delay);
+    }
+}
 
 
 // Configure the HTTP request pipeline.
