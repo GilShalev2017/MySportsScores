@@ -1,6 +1,4 @@
-#version: '3.7'
-
-services:
+﻿services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
@@ -18,18 +16,25 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"   # external access
-      - "29092:29092" # internal Docker network
+      - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-
+      KAFKA_DELETE_TOPIC_ENABLE: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server kafka:29092 --list || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+                 
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
     container_name: kafdrop
@@ -77,6 +82,25 @@ services:
       Elasticsearch__Url: "http://elasticsearch:9200"
     ports:
       - "5001:80"
+
+  notificationservice:
+    build:
+      context: .
+      dockerfile: src/NotificationService/Dockerfile
+    container_name: notificationservice
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      sqlserver:
+        condition: service_started
+    environment:
+      Kafka__BootstrapServers: kafka:29092
+      Redis__Connection: "redis:6379"
+      ConnectionStrings__SqlServer: "Server=sqlserver,1433;Database=Sports365;User Id=sa;Password=Strong!Passw0rd;TrustServerCertificate=True;Encrypt=False;"
+    ports:
+      - "5002:80"
 
   mongodb:
     image: mongo:7

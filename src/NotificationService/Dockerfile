@@ -1,25 +1,34 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
-# By Claude
+# Stage 1: Base - Defines the runtime environment
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+# Stage 2: Build - Compiles and restores dependencies
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["NotificationService/NotificationService.csproj", "NotificationService/"]
-COPY ["Common/Common.csproj", "Common/"]
-RUN dotnet restore "365Scores.NotificationService/365Scores.NotificationService.csproj"
-COPY . .
-WORKDIR "/src/NotificationService"
-RUN dotnet build "NotificationService.csproj" -c Release -o /app/build
 
+# Copy all project files for dependency restoration
+COPY ["src/NotificationService/NotificationService.csproj", "src/NotificationService/"]
+COPY ["src/Common/Common.csproj", "src/Common/"]
+
+# Restore dependencies
+RUN dotnet restore "src/NotificationService/NotificationService.csproj"
+
+# Copy remaining source code
+COPY src/. src/.
+
+# Build the project
+RUN dotnet build "src/NotificationService/NotificationService.csproj" -c Release -o /app/build
+
+# Stage 3: Publish - Creates the final runnable artifact
 FROM build AS publish
-RUN dotnet publish "NotificationService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "src/NotificationService/NotificationService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
+# Stage 4: Final - The smallest image for deployment
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Entrypoint
 ENTRYPOINT ["dotnet", "NotificationService.dll"]
