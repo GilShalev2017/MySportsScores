@@ -1,4 +1,4 @@
-#version: '3.7'
+version: '3.7'
 
 services:
   zookeeper:
@@ -18,8 +18,8 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"   # external access
-      - "29092:29092" # internal Docker network
+      - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -41,43 +41,6 @@ services:
       KAFKA_BROKERCONNECT: kafka:29092
       JVM_OPTS: "-Xms32M -Xmx64M"
 
-  feedlistenerservice:
-    build:
-      context: .
-      dockerfile: src/FeedListenerService/Dockerfile
-    container_name: feedlistenerservice
-    depends_on:
-      - kafka
-    environment:
-      Kafka__BootstrapServers: kafka:29092
-    ports:
-      - "5000:80"
-
-  ingestservice:
-    build:
-      context: .
-      dockerfile: src/IngestService/Dockerfile
-    container_name: ingestservice
-    depends_on:
-      kafka:
-        condition: service_started
-      sqlserver:
-        condition: service_started
-      redis:
-        condition: service_started
-      mongodb:
-        condition: service_started
-      elasticsearch:
-        condition: service_healthy
-    environment:
-      Kafka__BootstrapServers: kafka:29092
-      ConnectionStrings__SqlServer: "Server=sqlserver,1433;Database=Sports365;User Id=sa;Password=Strong!Passw0rd;TrustServerCertificate=True;Encrypt=False;"
-      Redis__Connection: "redis:6379"
-      MongoDB__Connection: "mongodb://mongodb:27017"
-      Elasticsearch__Url: "http://elasticsearch:9200"
-    ports:
-      - "5001:80"
-
   mongodb:
     image: mongo:7
     container_name: mongodb
@@ -85,12 +48,24 @@ services:
       - "27017:27017"
     volumes:
       - ./mongodb-data:/data/db
-
+  
   redis:
     image: redis:7-alpine
     container_name: redis
     ports:
       - "6379:6379"
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "Strong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ./sqlserver-init:/docker-entrypoint-initdb.d
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
@@ -109,19 +84,7 @@ services:
       timeout: 5s
       retries: 5
 
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver
-    environment:
-      SA_PASSWORD: "Strong!Passw0rd"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
-    volumes:
-      - sqlserver-data:/var/opt/mssql
-      - ./sqlserver-init:/docker-entrypoint-initdb.d
-
 volumes:
   sqlserver-data:
-  es-data:
   mongodb-data:
+  es-data:

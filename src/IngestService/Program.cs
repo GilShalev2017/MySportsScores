@@ -28,7 +28,7 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
 // Add Elasticsearch
 builder.Services.AddSingleton<IElasticClient>(sp =>
 {
-    var settings = new ConnectionSettings(new Uri(builder.Configuration.GetConnectionString("Elasticsearch")))
+    var settings = new ConnectionSettings(new Uri("http://elasticsearch:9200"))
         .DefaultIndex("sports-events");
     return new ElasticClient(settings);
 });
