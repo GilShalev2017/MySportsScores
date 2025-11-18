@@ -126,7 +126,7 @@
     ports:
       - "9200:9200"
     volumes:
-      - es-data:/usr/share/elasticsearch/data
+      - ./es-data:/usr/share/elasticsearch/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9200"]
       interval: 10s
@@ -152,7 +152,7 @@
     ports:
       - "1433:1433"
     volumes:
-      - sqlserver-data:/var/opt/mssql
+      - ./sqlserver-data:/var/opt/mssql
       - ./sqlserver-init:/docker-entrypoint-initdb.d
 
 volumes:
