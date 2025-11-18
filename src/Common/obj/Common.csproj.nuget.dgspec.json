@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Development\\365Scores\\src\\Common\\Common.csproj": {}
+    "C:\\Development\\Backup\\365Scores\\src\\Common\\Common.csproj": {}
   },
   "projects": {
-    "C:\\Development\\365Scores\\src\\Common\\Common.csproj": {
+    "C:\\Development\\Backup\\365Scores\\src\\Common\\Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Development\\365Scores\\src\\Common\\Common.csproj",
+        "projectUniqueName": "C:\\Development\\Backup\\365Scores\\src\\Common\\Common.csproj",
         "projectName": "Common",
-        "projectPath": "C:\\Development\\365Scores\\src\\Common\\Common.csproj",
+        "projectPath": "C:\\Development\\Backup\\365Scores\\src\\Common\\Common.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\Development\\365Scores\\src\\Common\\obj\\",
+        "outputPath": "C:\\Development\\Backup\\365Scores\\src\\Common\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -96,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

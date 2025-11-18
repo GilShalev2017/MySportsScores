@@ -1,6 +1,7 @@
 using Common.Data;
 using Common.Repositories;
 using IngestService.Repositories;
+using IngestService.Seeding;
 using IngestService.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -69,7 +70,9 @@ for (int i = 0; i < maxRetries; i++)
     {
         using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<SportsDbContext>();
-        context.Database.EnsureCreated();
+        await context.Database.MigrateAsync(); // Preferred over EnsureCreated
+        //context.Database.EnsureCreated();
+        await DataSeeder.SeedDatabaseAsync(scope.ServiceProvider); // <-- Seed here
         break;
     }
     catch (SqlException)
@@ -79,7 +82,6 @@ for (int i = 0; i < maxRetries; i++)
         Thread.Sleep(delay);
     }
 }
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

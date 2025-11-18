@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Aq6U1gRgwx8=",
+  "dgSpecHash": "iqriyXWO17U=",
   "success": true,
-  "projectFilePath": "C:\\Development\\365Scores\\src\\FeedListenerService\\FeedListenerService.csproj",
+  "projectFilePath": "C:\\Development\\Backup\\365Scores\\src\\FeedListenerService\\FeedListenerService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

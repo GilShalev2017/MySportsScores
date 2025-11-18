@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0vfngbn0M/8=",
+  "dgSpecHash": "hsWVeCK5gJc=",
   "success": true,
-  "projectFilePath": "C:\\Development\\365Scores\\src\\NotificationService\\NotificationService.csproj",
+  "projectFilePath": "C:\\Development\\Backup\\365Scores\\src\\NotificationService\\NotificationService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

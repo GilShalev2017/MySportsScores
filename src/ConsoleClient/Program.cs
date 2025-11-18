@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using System.Text;
 using System.Text.Json;
 
 Console.WriteLine("========================================");
@@ -37,6 +38,8 @@ finally
 
 static void SetupEventHandlers(HubConnection connection)
 {
+    Console.OutputEncoding = Encoding.UTF8;
+
     connection.Reconnecting += error =>
     {
         Console.WriteLine($"⚠️ Connection lost. Reconnecting...");

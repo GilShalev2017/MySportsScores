@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3bAehUF1d80=",
+  "dgSpecHash": "IRsaaJanCN0=",
   "success": true,
-  "projectFilePath": "C:\\Development\\365Scores\\src\\ConsoleClient\\ConsoleClient.csproj",
+  "projectFilePath": "C:\\Development\\Backup\\365Scores\\src\\ConsoleClient\\ConsoleClient.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\microsoft.aspnetcore.connections.abstractions\\9.0.10\\microsoft.aspnetcore.connections.abstractions.9.0.10.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\microsoft.aspnetcore.http.connections.client\\9.0.10\\microsoft.aspnetcore.http.connections.client.9.0.10.nupkg.sha512",
