@@ -46,6 +46,7 @@ builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddScoped<ISportEventService, SportEventService>();
 
 // Add CORS
 builder.Services.AddCors(options =>

@@ -70,8 +70,8 @@ for (int i = 0; i < maxRetries; i++)
     {
         using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<SportsDbContext>();
-        await context.Database.MigrateAsync(); // Preferred over EnsureCreated
-        //context.Database.EnsureCreated();
+        //await context.Database.MigrateAsync(); // Preferred over EnsureCreated
+        context.Database.EnsureCreated();
         await DataSeeder.SeedDatabaseAsync(scope.ServiceProvider); // <-- Seed here
         break;
     }
