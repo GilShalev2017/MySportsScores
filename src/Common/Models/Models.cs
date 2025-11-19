@@ -21,7 +21,7 @@
 
     public class Team
     {
-        public required int Id { get; set; }
+        public /*required*/ int Id { get; set; }
         public required string Name { get; set; }
         public required string ShortName { get; set; }
         public required string LogoUrl { get; set; }
@@ -33,7 +33,7 @@
     
     public class Player
     {
-        public required int Id { get; set; }
+        public /*required*/ int Id { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public string FullName => $"{FirstName} {LastName}";
@@ -59,7 +59,7 @@
 
     public class Match
     {
-        public required int Id { get; set; }
+        public /*required*/ int Id { get; set; }
         public required int LeagueId { get; set; }
         public required int HomeTeamId { get; set; }
         public required int AwayTeamId { get; set; }

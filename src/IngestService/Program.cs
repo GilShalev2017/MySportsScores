@@ -56,11 +56,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Ensure database is created
-//using (var scope = app.Services.CreateScope())
-//{
-//    var context = scope.ServiceProvider.GetRequiredService<SportsDbContext>();
-//    context.Database.EnsureCreated();
-//}
+
 var maxRetries = 10;
 var delay = TimeSpan.FromSeconds(5);
 
@@ -69,10 +65,13 @@ for (int i = 0; i < maxRetries; i++)
     try
     {
         using var scope = app.Services.CreateScope();
+        
         var context = scope.ServiceProvider.GetRequiredService<SportsDbContext>();
-        //await context.Database.MigrateAsync(); // Preferred over EnsureCreated
-        context.Database.EnsureCreated();
+        
+        await context.Database.MigrateAsync(); // Preferred over EnsureCreated
+       
         await DataSeeder.SeedDatabaseAsync(scope.ServiceProvider); // <-- Seed here
+        
         break;
     }
     catch (SqlException)

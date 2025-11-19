@@ -74,7 +74,8 @@ public class KafkaConsumerService : BackgroundService
             .Build();
 
         _consumers.Add(consumer);
-        consumer.Subscribe(topic);
+       
+        consumer.Subscribe(topic);// If topic doesn't exist, Kafka auto-creates it!
 
         _logger.LogInformation("Subscribed to topic: {Topic}", topic);
 

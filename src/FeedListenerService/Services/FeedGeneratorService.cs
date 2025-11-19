@@ -1,6 +1,11 @@
 ﻿using Common.Events;
 using Common.Models;
+using Confluent.Kafka;
 using FeedListenerService.Models;
+using Nest;
+using System.Collections.Concurrent;
+using System.Runtime.ConstrainedExecution;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FeedListenerService.Services
 {
@@ -159,7 +164,8 @@ namespace FeedListenerService.Services
                 Timestamp = DateTime.UtcNow
             };
 
-            await _kafka.PublishAsync("ingest-events", match.MatchId.ToString(), sportEvent);
+            //IMPORTANT = All events for a given MatchId will go to the same partition → ordering preserved per match.
+            await _kafka.PublishAsync("ingest-events", match.MatchId.ToString(), sportEvent); 
             Interlocked.Increment(ref _totalEventsGenerated);
 
             var scoreUpdate = new ScoreUpdate
@@ -172,9 +178,11 @@ namespace FeedListenerService.Services
                 Timestamp = DateTime.UtcNow
             };
 
+            //IMPORTANT = All events for a given MatchId will go to the same partition → ordering preserved per match.
             await _kafka.PublishAsync("live-scores", match.MatchId.ToString(), scoreUpdate);
             Interlocked.Increment(ref _totalEventsGenerated);
 
+            //IMPORTANT = All events for a given MatchId will go to the same partition → ordering preserved per match.
             _logger.LogInformation("⚽ Match {MatchId} - Goal at {Minute}' - Score: {HomeScore}-{AwayScore}",
                 match.MatchId, match.CurrentMinute, match.HomeScore, match.AwayScore);
         }
@@ -375,7 +383,7 @@ namespace FeedListenerService.Services
                     },
                     Timestamp = DateTime.UtcNow
                 };
-
+                //IMPORTANT All player updates for a given PlayerId will go to the same partition → ordering preserved per player.
                 await _kafka.PublishAsync("player-updates", playerId.ToString(), playerUpdate);
                 Interlocked.Increment(ref _totalEventsGenerated);
             }
