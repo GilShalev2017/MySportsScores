@@ -305,12 +305,14 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.Text;
 using System.Text.Json;
 
+Console.OutputEncoding = Encoding.UTF8;
+
 Console.WriteLine("========================================");
 Console.WriteLine("   365Scores Real-Time Console Client");
 Console.WriteLine("========================================\n");
 
 var notificationServiceUrl = args.Length > 0 ? args[0] : "http://localhost:5002";
-var dataApiUrl = args.Length > 1 ? args[1] : "http://localhost:5004";
+var dataApiUrl = args.Length > 1 ? args[1] : "http://localhost:5091";
 var hubUrl = $"{notificationServiceUrl}/sportshub";
 
 Console.WriteLine($"🔗 SignalR Hub: {hubUrl}");

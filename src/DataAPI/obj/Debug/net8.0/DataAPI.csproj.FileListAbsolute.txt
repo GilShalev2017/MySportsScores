@@ -206,3 +206,4 @@ C:\Development\Backup\365Scores\src\DataAPI\obj\Debug\net8.0\refint\DataAPI.dll
 C:\Development\Backup\365Scores\src\DataAPI\obj\Debug\net8.0\DataAPI.pdb
 C:\Development\Backup\365Scores\src\DataAPI\obj\Debug\net8.0\DataAPI.genruntimeconfig.cache
 C:\Development\Backup\365Scores\src\DataAPI\obj\Debug\net8.0\ref\DataAPI.dll
+C:\Development\Backup\365Scores\src\DataAPI\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -8,9 +8,12 @@ namespace IngestService.Repositories
 {
     public interface ISportEventRepository
     {
+        //MongoDB operations
         Task SaveEventToMongoAsync(SportEvent sportEvent);
-        Task SaveEventToElasticsearchAsync(SportEvent sportEvent);
+        //Redis operations
         Task UpdateRedisScoreAsync(int matchId, int homeScore, int awayScore);
+        //Elasticsearch operations
+        Task SaveEventToElasticsearchAsync(SportEvent sportEvent);
         Task IndexMatchToElasticsearchAsync(Match match);
         Task IndexPlayerToElasticsearchAsync(Player player);
     }
@@ -39,7 +42,7 @@ namespace IngestService.Repositories
             _logger = logger;
 
             // Initialize Elasticsearch indexes on startup
-            InitializeElasticsearchIndexesAsync().Wait();
+            //InitializeElasticsearchIndexesAsync().Wait();
         }
 
         private async Task InitializeElasticsearchIndexesAsync()

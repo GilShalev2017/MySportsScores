@@ -175,7 +175,7 @@ namespace IngestService.Services
                 await _sportEventRepository.SaveEventToMongoAsync(sportEvent);
 
                 // Index to Elasticsearch (for search) - EVENTS INDEX
-                await _sportEventRepository.SaveEventToElasticsearchAsync(sportEvent);
+                //await _sportEventRepository.SaveEventToElasticsearchAsync(sportEvent);
 
                 _logger.LogDebug("Processed sport event: {EventType} for match {MatchId} at minute {Minute}",
                     eventUpdate.EventType, eventUpdate.MatchId, eventUpdate.Minute);
@@ -205,7 +205,7 @@ namespace IngestService.Services
                     await _matchRepository.UpdateAsync(match);
 
                     // Index to Elasticsearch - MATCHES INDEX (for searching matches)
-                    await _sportEventRepository.IndexMatchToElasticsearchAsync(match);
+                   // await _sportEventRepository.IndexMatchToElasticsearchAsync(match);
 
                     _logger.LogInformation("✅ Updated match {MatchId} in SQL and Elasticsearch: {HomeScore}-{AwayScore} ({Status}, {Minute}')",
                         scoreUpdate.MatchId, scoreUpdate.HomeScore, scoreUpdate.AwayScore, scoreUpdate.Status, scoreUpdate.Minute);
@@ -242,7 +242,7 @@ namespace IngestService.Services
                 await _sportEventRepository.SaveEventToMongoAsync(sportEvent);
 
                 // Index score update event to Elasticsearch
-                await _sportEventRepository.SaveEventToElasticsearchAsync(sportEvent);
+                //await _sportEventRepository.SaveEventToElasticsearchAsync(sportEvent);
             }
             catch (Exception ex)
             {
@@ -250,7 +250,7 @@ namespace IngestService.Services
                 throw;
             }
         }
-        //Save player updates to SQL Server, MongoDB, and Elasticsearch
+        //Save player updates to MongoDB, and Elasticsearch
         public async Task ProcessPlayerUpdateAsync(PlayerUpdate playerUpdate)
         {
             try
@@ -268,7 +268,7 @@ namespace IngestService.Services
                     // For now, we'll just index to Elasticsearch
 
                     // Index to Elasticsearch - PLAYERS INDEX (for searching players)
-                    await _sportEventRepository.IndexPlayerToElasticsearchAsync(player);
+                    //await _sportEventRepository.IndexPlayerToElasticsearchAsync(player);
 
                     _logger.LogDebug("✅ Indexed player {PlayerId} ({FullName}) to Elasticsearch",
                         player.Id, player.FullName);
@@ -301,7 +301,7 @@ namespace IngestService.Services
                 await _sportEventRepository.SaveEventToMongoAsync(sportEvent);
 
                 // Index player update event to Elasticsearch
-                await _sportEventRepository.SaveEventToElasticsearchAsync(sportEvent);
+                //await _sportEventRepository.SaveEventToElasticsearchAsync(sportEvent);
 
                 _logger.LogDebug("Processed player update for player {PlayerId} in match {MatchId}",
                     playerUpdate.PlayerId, playerUpdate.MatchId);
