@@ -50,7 +50,9 @@ static async Task EnsureTopicsExistAsync(IConfiguration configuration)
         new TopicSpecification { Name = "ingest-events", NumPartitions = 12, ReplicationFactor = 1 },
         new TopicSpecification { Name = "live-scores", NumPartitions = 8, ReplicationFactor = 1 },
         new TopicSpecification { Name = "player-updates", NumPartitions = 6, ReplicationFactor = 1 },
-        new TopicSpecification { Name = "user-notifications", NumPartitions = 4, ReplicationFactor = 1 },
+        //user-notifications is only needed if ingest service enrich the raw data (like adding the names
+        //of teams, players, leagues instead of only Ids) and produce notifications
+       // new TopicSpecification { Name = "user-notifications", NumPartitions = 4, ReplicationFactor = 1 },
         new TopicSpecification { Name = "dead-letter-queue", NumPartitions = 2, ReplicationFactor = 1 }
     };
 

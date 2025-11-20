@@ -1,6 +1,8 @@
-using StackExchange.Redis;
-using NotificationService.Services;
+using Common.Data;
+using Microsoft.EntityFrameworkCore;
 using NotificationService.Hubs;
+using NotificationService.Services;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,13 @@ builder.Services.AddSignalR()
     });
 
 // Add Services
-builder.Services.AddSingleton<IUserPreferenceService, UserPreferenceService>();
+// Add DbContext for user preferences
+builder.Services.AddDbContext<SportsDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+
+// Register UserPreferenceService (SQL-backed)
+builder.Services.AddScoped<IUserPreferenceService, UserPreferenceService>(); 
+
 builder.Services.AddHostedService<KafkaNotificationConsumerService>();
 
 // Add CORS

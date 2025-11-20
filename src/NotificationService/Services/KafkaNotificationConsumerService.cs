@@ -40,10 +40,11 @@ namespace NotificationService.Services
 
             // Start consuming from multiple topics
             var consumerTasks = new List<Task>
-        {
-            ConsumeLiveScoresAsync(config, stoppingToken),
-            ConsumeIngestEventsAsync(config, stoppingToken)
-        };
+            {
+                ConsumeLiveScoresAsync(config, stoppingToken),
+                ConsumeIngestEventsAsync(config, stoppingToken),
+                ConsumePlayerUpdatesAsync(config, stoppingToken)
+            };
 
             // Start metrics reporting
             _ = Task.Run(() => ReportMetrics(stoppingToken), stoppingToken);
@@ -125,6 +126,66 @@ namespace NotificationService.Services
             }
         }
 
+        private async Task ConsumePlayerUpdatesAsync(ConsumerConfig config, CancellationToken stoppingToken)
+        {
+            var consumerConfig = new ConsumerConfig(config)
+            {
+                GroupId = $"{config.GroupId}-player-updates"
+            };
+
+            using var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
+            consumer.Subscribe("player-updates");
+
+            _logger.LogInformation("Subscribed to player-updates topic");
+
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    var consumeResult = consumer.Consume(TimeSpan.FromSeconds(1));
+
+                    if (consumeResult != null)
+                    {
+                        var playerUpdate = JsonSerializer.Deserialize<PlayerUpdate>(
+                            consumeResult.Message.Value,
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                        if (playerUpdate != null)
+                        {
+                            await BroadcastPlayerUpdateAsync(playerUpdate);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error consuming player-updates");
+                }
+            }
+        }
+
+        private async Task BroadcastPlayerUpdateAsync(PlayerUpdate playerUpdate)
+        {
+            try
+            {
+                // Broadcast to users following this player
+                await _hubContext.Clients.Group($"player_{playerUpdate.PlayerId}")
+                    .SendAsync("PlayerUpdate", playerUpdate);
+
+                // Also broadcast to match watchers (player stats in the match)
+                await _hubContext.Clients.Group($"match_{playerUpdate.MatchId}")
+                    .SendAsync("PlayerUpdate", playerUpdate);
+
+                Interlocked.Increment(ref _totalNotificationsSent);
+
+                _logger.LogDebug("Broadcasted player update for player {PlayerId} in match {MatchId}",
+                    playerUpdate.PlayerId, playerUpdate.MatchId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error broadcasting player update");
+            }
+        }
+       
         private async Task BroadcastScoreUpdateAsync(ScoreUpdate scoreUpdate)
         {
             try
