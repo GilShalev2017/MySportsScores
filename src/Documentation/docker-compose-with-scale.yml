@@ -62,7 +62,8 @@
     build:
       context: .
       dockerfile: src/IngestService/Dockerfile
-    container_name: ingestservice
+    #container_name: ingestservice
+    scale: 4
     depends_on:
       kafka:
         condition: service_started
@@ -81,7 +82,7 @@
       MongoDB__Connection: "mongodb://mongodb:27017"
       Elasticsearch__Url: "http://elasticsearch:9200"
     ports:
-      - "5001:80"
+      - "80" # Docker will map this container port (80) to a random, free host port for each of the 4 replicas
 
   notificationservice:
     build:
