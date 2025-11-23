@@ -42,7 +42,7 @@ namespace IngestService.Repositories
             _logger = logger;
 
             // Initialize Elasticsearch indexes on startup
-            //InitializeElasticsearchIndexesAsync().Wait();
+            InitializeElasticsearchIndexesAsync().Wait();
         }
 
         private async Task InitializeElasticsearchIndexesAsync()

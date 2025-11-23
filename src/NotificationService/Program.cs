@@ -29,20 +29,22 @@ builder.Services.AddScoped<IUserPreferenceService, UserPreferenceService>();
 
 builder.Services.AddHostedService<KafkaNotificationConsumerService>();
 
-// Add CORS
+// Add CORS - FIXED for SignalR
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.SetIsOriginAllowed(_ => true)  // Allows any origin (instead of AllowAnyOrigin)
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials();  // Required for SignalR
     });
 });
 
 var app = builder.Build();
 
 app.UseCors("AllowAll");
+
 app.UseRouting();
 
 app.MapHub<SportsNotificationHub>("/sportshub");
